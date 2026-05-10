@@ -1717,7 +1717,7 @@ const K = {
   profile:'lifeos_profile', goals:'lifeos_goals', habits:'lifeos_habits',
   todos:'lifeos_todos', workouts:'lifeos_workouts', nutrition:'lifeos_nutrition',
   sleep:'lifeos_sleep', finance:'lifeos_finance', journal:'lifeos_journal',
-  chat:'lifeos_chat', prs:'lifeos_prs', dailyMsg:'lifeos_daily_msg'
+  chat:'lifeos_chat', prs:'lifeos_prs', dailyMsg:'lifeos_daily_msg', dailyBriefing:'lifeos_daily_briefing'
 };
 
 function load(key, fb=null){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fb}catch{return fb}}
@@ -2307,7 +2307,7 @@ async function loadDailyAIMessage(){
   if(cached && cached.date===today() && cached.text && cached.isAI){
     el('motive-quote').textContent = cached.text;
     if(badge) badge.style.display = 'inline-flex';
-    if(aiCard) aiCard.textContent = cached.text;
+    loadDailyBriefing();
     return;
   }
 
@@ -2329,8 +2329,9 @@ async function loadDailyAIMessage(){
       content:'Give me a powerful, personalised 2–3 sentence morning message based on my current data. Reference my specific goals, recent habits, or progress. Be direct and energising. No fluff.'}], 300);
     el('motive-quote').textContent = text;
     if(badge) badge.style.display = 'inline-flex';
-    if(aiCard) aiCard.textContent = text;
     save(K.dailyMsg, {date:today(), text, isAI:true});
+    // Load the separate briefing card
+    loadDailyBriefing();
   } catch(e) {
     const msg = e.message==='NO_API_KEY'
       ? 'Add your API key in Settings.'
@@ -2342,9 +2343,62 @@ async function loadDailyAIMessage(){
 }
 
 function refreshDailyMessage(){
-  // Clear cache and regenerate
   save(K.dailyMsg, null);
+  save(K.dailyBriefing, null);
   loadDailyAIMessage();
+}
+
+async function loadDailyBriefing(){
+  const p = getProfile();
+  const aiCard = el('dash-ai-text');
+  if(!aiCard) return;
+
+  // Use cached briefing if from today
+  const cached = load(K.dailyBriefing);
+  if(cached && cached.date===today() && cached.text){
+    aiCard.innerHTML = cached.text;
+    return;
+  }
+
+  if(!p.apiKey){
+    aiCard.innerHTML = `Add your Claude API key in <strong style="color:var(--gold);cursor:pointer" onclick="nav('settings')">Settings</strong> to unlock your personalised AI coaching.`;
+    return;
+  }
+
+  aiCard.innerHTML = `<span class="ai-loading"><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span></span>`;
+
+  try{
+    // Build a sharp data snapshot for the briefing
+    const habits   = getHabits();
+    const doneCnt  = habits.filter(h=>isHabitDoneToday(h)).length;
+    const missedHabits = habits.filter(h=>!isHabitDoneToday(h)).map(h=>h.name).join(', ');
+    const goals    = getGoals().filter(g=>!g.completed);
+    const todayNut = todayNutrition();
+    const lastSleep= getSleepArr().slice(-1)[0];
+    const wkCount  = workoutsThisWeek();
+    const lastJournal = getJournal().slice(-1)[0];
+
+    const snapshot = `
+Habits today: ${doneCnt}/${habits.length} done${missedHabits?' — missed: '+missedHabits:''}
+Active goals: ${goals.map(g=>`${g.title} (${calcGoalProgress(g)}%)`).join(', ')||'none'}
+Workouts this week: ${wkCount}
+Today's calories: ${todayNut?todayNut.calories+'kcal':'not logged'}
+Last night: ${lastSleep?lastSleep.hours+'h sleep, quality '+lastSleep.quality+'/10':'no sleep logged'}
+Last journal mood: ${lastJournal?lastJournal.mood+'/10 — "'+lastJournal.entry?.slice(0,100)+'"':'no entry'}
+`.trim();
+
+    const text = await callClaude([{role:'user',
+      content:`Here is my data snapshot for today:\n${snapshot}\n\nGive me a sharp coaching briefing in 3–4 sentences. Call out what I'm doing well, what I'm slacking on, and the ONE thing I must do today. Be direct — David Goggins style.`
+    }], 350);
+
+    // Format with line breaks
+    const formatted = esc(text).replace(/\n/g,'<br>');
+    aiCard.innerHTML = formatted;
+    save(K.dailyBriefing, {date:today(), text:formatted});
+
+  } catch(e) {
+    aiCard.innerHTML = `<span style="color:var(--orange);font-size:12px">⚠️ Briefing failed: ${esc(e.message)}</span>`;
+  }
 }
 
 /* ── JOURNAL AI RESPONSE ── */
