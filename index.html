@@ -1033,8 +1033,7 @@ input,textarea,select{font-family:inherit}
         AI Coach Daily Briefing
       </div>
       <div class="ai-card-text" id="dash-ai-text">
-        Add your Claude API key in <strong style="color:var(--gold);cursor:pointer" onclick="nav('settings')">Settings</strong>
-        to unlock your personalised AI coaching — daily briefings, goal analysis, workout plans, and more.
+        <span style="color:var(--gray);font-size:13px">Loading your briefing…</span>
       </div>
     </div>
 
@@ -2301,11 +2300,14 @@ async function loadDailyAIMessage(){
   const p = getProfile();
   const badge = el('motive-ai-badge');
 
+  const aiCard = el('dash-ai-text');
+
   // Use cached AI message if from today
   const cached = load(K.dailyMsg);
   if(cached && cached.date===today() && cached.text && cached.isAI){
     el('motive-quote').textContent = cached.text;
     if(badge) badge.style.display = 'inline-flex';
+    if(aiCard) aiCard.textContent = cached.text;
     return;
   }
 
@@ -2313,26 +2315,29 @@ async function loadDailyAIMessage(){
   if(!p.apiKey){
     el('motive-quote').textContent = QUOTES[new Date().getDay()%QUOTES.length];
     if(badge) badge.style.display = 'none';
+    if(aiCard) aiCard.innerHTML = `Add your Claude API key in <strong style="color:var(--gold);cursor:pointer" onclick="nav('settings')">Settings</strong> to unlock your personalised AI coaching.`;
     return;
   }
 
   // Show loading
   el('motive-quote').innerHTML = `<span style="font-size:13px;color:var(--gray)">🤖 Generating your personalised briefing…</span>`;
   if(badge) badge.style.display = 'none';
+  if(aiCard) aiCard.innerHTML = `<span class="ai-loading"><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span></span>`;
 
   try{
     const text = await callClaude([{role:'user',
       content:'Give me a powerful, personalised 2–3 sentence morning message based on my current data. Reference my specific goals, recent habits, or progress. Be direct and energising. No fluff.'}], 300);
     el('motive-quote').textContent = text;
     if(badge) badge.style.display = 'inline-flex';
+    if(aiCard) aiCard.textContent = text;
     save(K.dailyMsg, {date:today(), text, isAI:true});
   } catch(e) {
-    // Show actual error so user knows what went wrong
     const msg = e.message==='NO_API_KEY'
       ? 'Add your API key in Settings.'
       : `AI error: ${e.message}`;
     el('motive-quote').innerHTML = `<span style="font-size:13px;color:var(--orange)">⚠️ ${esc(msg)}</span><br><span style="font-size:14px;opacity:.7">${QUOTES[new Date().getDay()%QUOTES.length]}</span>`;
     if(badge) badge.style.display = 'none';
+    if(aiCard) aiCard.innerHTML = `<span style="color:var(--orange)">⚠️ ${esc(msg)}</span>`;
   }
 }
 
