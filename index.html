@@ -1176,13 +1176,6 @@ input,textarea,select{font-family:inherit}
       <div class="pbar-wrap"><div class="pbar-fill green" id="nut-pro-bar" style="width:0%"></div></div>
     </div>
 
-    <div style="margin-top:14px">
-      <div class="macro-header" style="margin-bottom:0">
-        <div class="macro-name">💧 Water</div>
-        <div class="macro-vals"><span id="nut-water-cur">0</span> / 8 cups</div>
-      </div>
-      <div class="water-cups" id="water-cups-row"></div>
-    </div>
   </div>
 
   <!-- Today's meals -->
@@ -2068,33 +2061,23 @@ function confirmClear(){
 /* ================================================================
    PART 5 — AI ENGINE
 ================================================================ */
-const BASE_SYSTEM_PROMPT = `You are an elite personal coach who has helped people become millionaires, athletes, and high performers. You are direct, no excuses, no sugarcoating. You think like David Goggins, Alex Hormozi, and Warren Buffett combined.
+const BASE_SYSTEM_PROMPT = `You are an elite personal coach. Direct, honest, no sugarcoating — but you are rational and make sense.
 
-You know everything about the user:
-- Their goals and deadlines
-- Their gym progress and streaks
-- Their daily habits and completions
-- Their finances and savings
-- Their journal entries and mood
-- Their sleep and energy levels
+CRITICAL RULES — follow these always:
+1. You always know the current time. NEVER criticise incomplete daily metrics if the day is not over. If it is 8am and they have not eaten, that is completely normal. If it is 10pm and they have not eaten, that is worth mentioning. Use context.
+2. Judge PATTERNS across multiple days, not single incomplete snapshots. One missed habit today means nothing. Missing the same habit 5 days in a row is a pattern worth calling out.
+3. Only call something out if it is actually a problem given the time and context. A good coach is sharp, not irrational.
+4. Give specific, actionable advice — not generic motivational filler.
+5. Celebrate real wins specifically when they exist.
+6. Always end with ONE clear action they can take right now given the current time of day.
 
-Your job is to:
-- Hold them accountable with zero tolerance for excuses
-- Give specific actionable steps, not generic advice
-- Celebrate wins loudly
-- Call out patterns that are holding them back
-- Think long term, every daily action compounds
-- Push them when they are comfortable
-- Remind them why they started when they are weak
+Your style:
+- Direct and confident, never preachy
+- Short sentences, no fluff
+- Reference their actual data — goals, habits, workouts, sleep, finances, journal
+- Think like a world-class coach who has seen real results, not someone who just yells
 
-You believe:
-- Discipline beats motivation every time
-- Small daily actions create massive results
-- Excuses are the enemy of progress
-- Every day they don't act someone else is getting ahead
-- Financial freedom is built through skills, consistency, and smart decisions
-
-Always end responses with one powerful action they can take RIGHT NOW.`;
+You believe discipline beats motivation, small daily actions compound, and financial freedom is built through consistency and smart decisions.`;
 
 function buildSystemPrompt(){
   const p = getProfile();
@@ -2117,14 +2100,19 @@ function buildSystemPrompt(){
   const inc = mo.filter(f=>f.type==='income').reduce((s,f)=>s+(f.amount||0),0);
   const exp = mo.filter(f=>f.type==='expense').reduce((s,f)=>s+(f.amount||0),0);
   const nut = getNutritionArr().find(n=>n.date===td);
-  const nutStr = nut?`${nut.calories||0}/${p.calGoal||2200} cal, ${nut.protein||0}g protein, ${nut.water||0}/8 water`:'Not logged today';
+  const nutStr = nut?`${nut.calories||0}/${p.calGoal||2200} kcal logged, ${nut.protein||0}g protein`:'Nothing logged yet today';
   const jRecent = getJournal().slice(-3)
     .map(j=>`• ${j.date} (Mood ${j.mood||'?'}/10): "${(j.entry||'').slice(0,200)}"`).join('\n')||'No recent entries';
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const hour = now.getHours();
+  const timeOfDay = hour<12?'morning':hour<17?'afternoon':hour<21?'evening':'night';
   return BASE_SYSTEM_PROMPT + `
 
 === LIVE USER DATA ===
 NAME: ${p.name||'User'} | AGE: ${p.age||'?'} | WEIGHT: ${p.weight?p.weight+' kg':'?'}
 MAIN GOAL: ${p.mainGoal||'Not set'}
+CURRENT TIME: ${timeStr} (${timeOfDay}) — factor this into everything you say
 TODAY: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
 
 ACTIVE GOALS:
@@ -2368,7 +2356,11 @@ async function loadDailyBriefing(){
   aiCard.innerHTML = `<span class="ai-loading"><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span><span class="ai-dot-loader"></span></span>`;
 
   try{
-    // Build a sharp data snapshot for the briefing
+    const now2      = new Date();
+    const timeStr2  = now2.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    const hour2     = now2.getHours();
+    const timeOfDay2= hour2<12?'morning':hour2<17?'afternoon':hour2<21?'evening':'night';
+
     const habits   = getHabits();
     const doneCnt  = habits.filter(h=>isHabitDoneToday(h)).length;
     const missedHabits = habits.filter(h=>!isHabitDoneToday(h)).map(h=>h.name).join(', ');
@@ -2379,16 +2371,17 @@ async function loadDailyBriefing(){
     const lastJournal = getJournal().slice(-1)[0];
 
     const snapshot = `
-Habits today: ${doneCnt}/${habits.length} done${missedHabits?' — missed: '+missedHabits:''}
-Active goals: ${goals.map(g=>`${g.title} (${calcGoalProgress(g)}%)`).join(', ')||'none'}
+Current time: ${timeStr2} (${timeOfDay2})
+Habits today: ${doneCnt}/${habits.length} done${missedHabits?' — not yet done: '+missedHabits:''}
+Active goals: ${goals.map(g=>`${g.title} (${calcGoalProgress(g)}%)`).join(', ')||'none set'}
 Workouts this week: ${wkCount}
-Today's calories: ${todayNut?todayNut.calories+'kcal':'not logged'}
-Last night: ${lastSleep?lastSleep.hours+'h sleep, quality '+lastSleep.quality+'/10':'no sleep logged'}
-Last journal mood: ${lastJournal?lastJournal.mood+'/10 — "'+lastJournal.entry?.slice(0,100)+'"':'no entry'}
+Calories logged so far today: ${todayNut?todayNut.calories+'kcal':'nothing logged yet'}
+Last night sleep: ${lastSleep?lastSleep.hours+'h, quality '+lastSleep.quality+'/10':'not logged'}
+Last journal mood: ${lastJournal?lastJournal.mood+'/10 — "'+lastJournal.entry?.slice(0,100)+'"':'no entry yet'}
 `.trim();
 
     const text = await callClaude([{role:'user',
-      content:`Here is my data snapshot for today:\n${snapshot}\n\nGive me a sharp coaching briefing in 3–4 sentences. Call out what I'm doing well, what I'm slacking on, and the ONE thing I must do today. Be direct — David Goggins style.`
+      content:`My data snapshot:\n${snapshot}\n\nGive me a direct coaching briefing in 3–4 sentences. Be smart about the time of day — if it is morning, do not criticise things I have not had a chance to do yet. Focus on real patterns and the most important thing I should do right now. Direct, no fluff.`
     }], 350);
 
     // Format with line breaks
@@ -2895,30 +2888,14 @@ function renderNutrition(){
   el('nut-cal-goal').textContent=calGoal;
   el('nut-pro-cur').textContent=nut.protein||0;
   el('nut-pro-goal').textContent=proGoal;
-  el('nut-water-cur').textContent=nut.water||0;
   const calPct=Math.min(100,((nut.calories||0)/calGoal)*100);
   const proPct=Math.min(100,((nut.protein||0)/proGoal)*100);
   el('nut-cal-bar').style.width=calPct+'%';
   el('nut-cal-bar').className='pbar-fill'+(calPct>110?' red':calPct>=90?' green':'');
   el('nut-pro-bar').style.width=proPct+'%';
-  renderWaterCups(nut.water||0);
   renderMealsList(nut);
 }
 
-function renderWaterCups(filled){
-  const row=el('water-cups-row');if(!row)return;
-  row.innerHTML=Array.from({length:8},(_,i)=>`
-    <div class="w-cup ${i<filled?'filled':''}" onclick="setWater(${i+1})" title="${i+1} cups">
-      ${i<filled?'💧':'○'}
-    </div>`).join('');
-}
-
-function setWater(cups){
-  const arr=getNutritionArr();
-  const t=arr.find(n=>n.date===today());if(!t)return;
-  t.water=t.water===cups?cups-1:cups;
-  saveNutritionArr(arr);renderNutrition();renderDashboard();
-}
 
 function renderMealsList(nut){
   const list=el('nut-meals-list');if(!list)return;
