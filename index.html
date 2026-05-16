@@ -797,15 +797,6 @@ input,textarea,select{font-family:inherit}
   .g21, .g12  { grid-template-columns: 1fr !important; }
   .g3.goals-grid { grid-template-columns: 1fr !important; }
 
-  /* ── 14. GYM ─────────────────────────────────────────────── */
-  /* PR grid: 2 cols on phone */
-  #gym-pr-grid { grid-template-columns: repeat(2,1fr) !important; }
-  .pr-weight  { font-size: 20px !important; }
-  /* Exercise rows in modal: stack sets/reps/weight */
-  .er-grid    { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
-  .er-field input { font-size: 16px !important; padding: 8px 6px !important; }
-  .wk-head    { padding: 12px 12px !important; }
-  .wk-body    { padding: 0 12px 12px !important; }
 
   /* ── 15. NUTRITION ──────────────────────────────────────── */
   .w-cup      { width: 40px !important; height: 40px !important; font-size: 18px !important; }
@@ -870,9 +861,6 @@ input,textarea,select{font-family:inherit}
 
   <div class="nav-group">
     <div class="nav-group-label">Track</div>
-    <button class="nav-item" data-page="gym" onclick="nav('gym')">
-      <span class="nav-icon">💪</span><span class="nav-label">Gym</span>
-    </button>
     <button class="nav-item" data-page="nutrition" onclick="nav('nutrition')">
       <span class="nav-icon">🥗</span><span class="nav-label">Nutrition</span>
     </button>
@@ -940,11 +928,6 @@ input,textarea,select{font-family:inherit}
     </div>
     <div class="today-sep"></div>
     <div class="today-item">
-      <div class="today-label">Workouts/Wk</div>
-      <div class="today-val" id="dash-workouts-week"><span>0</span></div>
-    </div>
-    <div class="today-sep"></div>
-    <div class="today-item">
       <div class="today-label">Calories</div>
       <div class="today-val" id="dash-calories"><span>0</span></div>
     </div>
@@ -968,12 +951,6 @@ input,textarea,select{font-family:inherit}
       <div class="stat-value" id="dash-net">OMR 0</div>
       <div class="stat-label">Monthly Net</div>
       <div class="stat-change flat" id="dash-net-sub">income − expenses</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">😊</span>
-      <div class="stat-value" id="dash-mood">—</div>
-      <div class="stat-label">Avg Mood</div>
-      <div class="stat-change flat">last 7 days</div>
     </div>
   </div>
 
@@ -1016,7 +993,6 @@ input,textarea,select{font-family:inherit}
         <div class="card-title">Quick Log</div>
       </div>
       <div class="grid g2" style="gap:10px">
-        <div class="quick-action" onclick="nav('gym')"><span class="qa-icon">💪</span>Workout</div>
         <div class="quick-action" onclick="nav('nutrition')"><span class="qa-icon">🥗</span>Meal</div>
         <div class="quick-action" onclick="nav('sleep')"><span class="qa-icon">😴</span>Sleep</div>
         <div class="quick-action" onclick="nav('finance')"><span class="qa-icon">💰</span>Expense</div>
@@ -1037,19 +1013,6 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Mood Trend</div>
-        <button class="btn btn-ghost btn-sm" onclick="nav('journal')">Log →</button>
-      </div>
-      <div id="dash-mood-chart-wrap" style="position:relative;height:120px">
-        <canvas id="dash-mood-chart"></canvas>
-      </div>
-      <div id="dash-mood-empty" class="empty" style="padding:24px 0;display:none">
-        <span class="empty-icon" style="font-size:32px">📔</span>
-        <p style="font-size:12px">No journal entries yet.</p>
-      </div>
-    </div>
   </div>
 
 </section>
@@ -1108,40 +1071,6 @@ input,textarea,select{font-family:inherit}
   <div id="tasks-list"></div>
 </section>
 
-<!-- ═══════════════════ GYM ═══════════════════ -->
-<section class="page" id="page-gym">
-  <div class="page-header">
-    <div>
-      <div class="page-title">Gym 💪</div>
-      <div class="page-subtitle">Log sets, track PRs, get stronger every week</div>
-    </div>
-    <button class="btn btn-gold" onclick="openWorkoutModal()">+ Log Workout</button>
-  </div>
-
-  <div class="summary-bar" id="gym-summary-bar"></div>
-
-  <!-- PR Board -->
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-header">
-      <div class="card-title">🏆 Personal Records</div>
-      <span class="badge badge-gold" id="gym-pr-count">0 exercises</span>
-    </div>
-    <div class="grid g4" style="gap:10px" id="gym-pr-grid"></div>
-  </div>
-
-  <!-- Weekly Volume Chart -->
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-header">
-      <div class="card-title">Weekly Volume</div>
-      <span class="badge badge-gold" id="gym-weekly-vol">0 kg</span>
-    </div>
-    <div style="position:relative;height:160px"><canvas id="gym-volume-chart"></canvas></div>
-  </div>
-
-  <!-- Recent Workouts -->
-  <div class="section-label" style="margin-bottom:12px">Recent Workouts</div>
-  <div id="gym-workouts-list"></div>
-</section>
 
 <!-- ═══════════════════ NUTRITION ═══════════════════ -->
 <section class="page" id="page-nutrition">
@@ -1274,11 +1203,6 @@ input,textarea,select{font-family:inherit}
         <span class="jform-date" id="j-today-date"></span>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Mood (1–10)</label>
-        <div class="scale-btns" id="j-mood-btns"></div>
-        <input type="hidden" id="j-mood-val" value="7">
-      </div>
 
       <div class="form-group" style="margin-bottom:12px">
         <label class="form-label">What happened today? Be honest.</label>
@@ -1330,7 +1254,6 @@ input,textarea,select{font-family:inherit}
     <div class="coach-actions-row">
       <button class="coach-qbtn" onclick="quickAction('daily_plan')">📋 Today's Plan</button>
       <button class="coach-qbtn" onclick="quickAction('accountability')">🔥 Accountability Check</button>
-      <button class="coach-qbtn" onclick="quickAction('workout')">💪 Next Workout</button>
       <button class="coach-qbtn" onclick="quickAction('goals')">🎯 Review Goals</button>
       <button class="coach-qbtn" onclick="quickAction('motivation')">⚡ Push Me</button>
       <button class="coach-qbtn" onclick="quickAction('finance')">💰 Finance Review</button>
@@ -1444,8 +1367,8 @@ input,textarea,select{font-family:inherit}
     <button class="bnav-item" id="bn-habits" onclick="nav('habits')">
       <span class="bn-icon">🔥</span>Habits
     </button>
-    <button class="bnav-item" id="bn-gym" onclick="nav('gym')">
-      <span class="bn-icon">💪</span>Gym
+    <button class="bnav-item" id="bn-journal" onclick="nav('journal')">
+      <span class="bn-icon">📔</span>Journal
     </button>
     <button class="bnav-item" id="bn-coach" onclick="nav('coach')">
       <span class="bn-icon">🤖</span>Coach
@@ -1501,27 +1424,6 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
-<!-- ═══ MODAL: LOG WORKOUT ═══ -->
-<div class="overlay" id="workout-modal">
-  <div class="modal modal-wide">
-    <div class="modal-title">💪 Log Workout</div>
-    <div class="form-group">
-      <label class="form-label">Workout Name (optional)</label>
-      <input type="text" class="form-input" id="wk-name" placeholder="e.g. Push Day, Leg Day, Full Body">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Date</label>
-      <input type="date" class="form-input" id="wk-date">
-    </div>
-    <div class="section-label" style="margin-bottom:8px">Exercises</div>
-    <div id="exercise-rows"></div>
-    <button class="btn btn-outline" style="width:100%;margin-top:4px;min-height:44px" onclick="addExerciseRow()">+ Add Exercise</button>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('workout-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveWorkout()">Log Workout 💪</button>
-    </div>
-  </div>
-</div>
 
 <!-- ═══ MODAL: LOG MEAL ═══ -->
 <div class="overlay" id="meal-modal">
@@ -1572,11 +1474,6 @@ input,textarea,select{font-family:inherit}
       <label class="form-label">Sleep Quality (1–10)</label>
       <div class="scale-btns" id="sleep-quality-btns"></div>
       <input type="hidden" id="sleep-quality-val" value="7">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Energy Level Today (1–10)</label>
-      <div class="scale-btns" id="sleep-energy-btns"></div>
-      <input type="hidden" id="sleep-energy-val" value="7">
     </div>
     <div class="form-group">
       <label class="form-label">Notes (optional)</label>
@@ -1834,10 +1731,6 @@ function todayTodos(){
   return getTodos().filter(x=>!x.archived&&(x.date===t||x.recurring));
 }
 
-function workoutsThisWeek(){
-  const ws=thisWeekStart();
-  return getWorkouts().filter(w=>new Date(w.date+'T12:00:00')>=ws).length;
-}
 
 function todayNutrition(){return getNutrition().find(n=>n.date===today())||null}
 
@@ -1849,12 +1742,6 @@ function monthlyFinance(){
   return{income,expenses,net:income-expenses};
 }
 
-function avgMood(days=7){
-  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);
-  const entries=getJournal().filter(j=>new Date(j.date+'T12:00:00')>=cutoff&&j.mood);
-  if(!entries.length)return null;
-  return(entries.reduce((s,j)=>s+j.mood,0)/entries.length).toFixed(1);
-}
 
 /* ─── CHARTS REGISTRY ─── */
 const charts={};
@@ -1873,7 +1760,7 @@ function nav(page){
   const t=document.getElementById('page-'+page);
   if(t)t.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
-  const bnMap={dashboard:'bn-dashboard',habits:'bn-habits',gym:'bn-gym',coach:'bn-coach'};
+  const bnMap={dashboard:'bn-dashboard',habits:'bn-habits',journal:'bn-journal',coach:'bn-coach'};
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   if(bnMap[page])el(bnMap[page]).classList.add('active');
   currentPage=page;closeMore();
@@ -1882,7 +1769,6 @@ function nav(page){
   if(page==='goals')     renderGoals();
   if(page==='habits')    renderHabits();
   if(page==='tasks')   { taskFilter='all'; renderTasks(); }
-  if(page==='gym')       renderGym();
   if(page==='nutrition') renderNutrition();
   if(page==='sleep')     renderSleep();
   if(page==='finance')   renderFinance();
@@ -1911,7 +1797,6 @@ function renderDashboard(){
   const todos=todayTodos();
   const goals=getGoals();
   const fin=monthlyFinance();
-  const mood=avgMood(7);
 
   /* Banner */
   el('motive-greeting').textContent=greeting()+(p.name?', '+p.name:'')+' 👊';
@@ -1924,7 +1809,6 @@ function renderDashboard(){
   el('dash-habits-done').innerHTML=`<span>${hDone}</span>/${habits.length}`;
   const tDone=todos.filter(x=>x.done).length;
   el('dash-tasks-done').innerHTML=`<span>${tDone}</span>/${todos.length}`;
-  el('dash-workouts-week').innerHTML=`<span>${workoutsThisWeek()}</span>`;
   const nut=todayNutrition();
   el('dash-calories').innerHTML=`<span>${nut?nut.calories||0:0}</span>`;
 
@@ -1937,7 +1821,6 @@ function renderDashboard(){
   el('dash-net').textContent=(net>=0?'+OMR ':'-OMR ')+Math.abs(net).toLocaleString();
   el('dash-net').style.color=net>=0?'var(--green)':'var(--red)';
   el('dash-net-sub').textContent=`OMR ${fin.income.toLocaleString()} in · OMR ${fin.expenses.toLocaleString()} out`;
-  el('dash-mood').textContent=mood!==null?mood+'/10':'—';
 
   /* AI daily message */
   loadDailyAIMessage();
@@ -1951,8 +1834,6 @@ function renderDashboard(){
   renderDashHabits(habits);
   /* Goal rings */
   renderDashGoals(goals);
-  /* Mood chart */
-  renderMoodChart();
 }
 
 function renderDashHabits(habits){
@@ -2009,29 +1890,6 @@ function renderDashGoals(goals){
   }).join('');
 }
 
-function renderMoodChart(){
-  const journal=getJournal().slice(-7);
-  const withMood=journal.filter(j=>j.mood);
-  const wrap=el('dash-mood-chart-wrap');
-  const empty=el('dash-mood-empty');
-  if(!withMood.length){wrap.style.display='none';empty.style.display='';return}
-  wrap.style.display='';empty.style.display='none';
-  mkChart('dash-mood-chart',{
-    type:'line',
-    data:{
-      labels:withMood.map(j=>fmtDate(j.date)),
-      datasets:[{data:withMood.map(j=>j.mood),borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.08)',
-        borderWidth:2,fill:true,tension:.4,pointBackgroundColor:'#c9a84c',pointRadius:4}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{color:'#888',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-        y:{min:0,max:10,ticks:{color:'#888',font:{size:10},stepSize:2},grid:{color:'rgba(255,255,255,0.04)'}}
-      }
-    }
-  });
-}
 
 /* ─── UTILITIES ─── */
 function toast(msg,type='default'){
@@ -2086,15 +1944,8 @@ function buildSystemPrompt(){
     .map(g=>`• ${g.title} [${calcGoalProgress(g)}%]${g.deadline?' due '+g.deadline:''}`).join('\n')||'None set';
   const habits = getHabits()
     .map(h=>`• ${h.name}: ${isHabitDoneToday(h)?'✅ Done':'❌ Not done'} (${calcStreak(h)}-day streak)`).join('\n')||'None tracked';
-  const cutoff = new Date(Date.now()-7*864e5).toISOString().split('T')[0];
-  const recentWk = getWorkoutsArr().filter(w=>w.date>=cutoff)
-    .map(w=>`• ${w.date}: ${w.name} — ${(w.exercises||[]).map(e=>`${e.name} ${e.sets}×${e.reps}@${e.weight}kg`).join(', ')}`).join('\n')||'No workouts this week';
-  const prs = getPRs();
-  const prStr = Object.entries(prs).slice(0,5).map(([n,v])=>`${n}: ${v.weight}kg`).join(', ')||'None';
   const sleepR = getSleepArr().slice(-7);
   const avgSl = sleepR.length?(sleepR.reduce((s,x)=>s+(x.hours||0),0)/sleepR.length).toFixed(1):'?';
-  const avgEn = sleepR.filter(x=>x.energy).length?
-    (sleepR.filter(x=>x.energy).reduce((s,x)=>s+x.energy,0)/sleepR.filter(x=>x.energy).length).toFixed(1):'?';
   const month = td.substring(0,7);
   const mo = getFinArr().filter(f=>f.date?.startsWith(month));
   const inc = mo.filter(f=>f.type==='income').reduce((s,f)=>s+(f.amount||0),0);
@@ -2102,7 +1953,7 @@ function buildSystemPrompt(){
   const nut = getNutritionArr().find(n=>n.date===td);
   const nutStr = nut?`${nut.calories||0}/${p.calGoal||2200} kcal logged, ${nut.protein||0}g protein`:'Nothing logged yet today';
   const jRecent = getJournal().slice(-3)
-    .map(j=>`• ${j.date} (Mood ${j.mood||'?'}/10): "${(j.entry||'').slice(0,200)}"`).join('\n')||'No recent entries';
+    .map(j=>`• ${j.date}: "${(j.entry||'').slice(0,200)}"`).join('\n')||'No recent entries';
   const now = new Date();
   const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
   const hour = now.getHours();
@@ -2121,12 +1972,8 @@ ${goals}
 TODAY'S HABITS:
 ${habits}
 
-RECENT WORKOUTS (7 days):
-${recentWk}
-PERSONAL RECORDS: ${prStr}
-
 TODAY'S NUTRITION: ${nutStr}
-SLEEP (7-night avg): ${avgSl}h | Avg Energy: ${avgEn}/10
+SLEEP (7-night avg): ${avgSl}h
 
 FINANCES (This month): Income OMR ${inc.toLocaleString()} | Expenses OMR ${exp.toLocaleString()} | Net OMR ${(inc-exp).toLocaleString()}${p.savingsGoal?' | Goal: OMR '+p.savingsGoal.toLocaleString():''}
 
@@ -2268,12 +2115,11 @@ function clearChat(){
 const QUICK_PROMPTS={
   daily_plan:     'Based on everything you know about me — my goals, habits, sleep, nutrition and recent workouts — give me a focused, prioritised plan for today. Be specific.',
   accountability: 'Do a full accountability check on me. Look at my goals, habit streaks, workout frequency, sleep quality, finances and recent journal mood. Call out exactly where I am falling short. No sugarcoating.',
-  workout:        'Generate my next optimal workout session based on my recent training history and personal records. Give me exact exercises, sets, reps, and target weights.',
   goals:          'Review all my active goals. Which one needs the most attention right now? Give me 3 specific actions I can take THIS WEEK to accelerate progress on it.',
   motivation:     'I need to be pushed right now. Look at what I have been doing this week and tell me what I need to hear — not what I want to hear. Make it hit.',
   finance:        'Review my finances for this month. What is my savings rate? Where am I wasting money? Give me one specific thing I can cut or change starting today.',
-  sleep:          'Analyse my last 7 nights of sleep and energy data. What patterns do you see? Give me 3 specific things I can do starting tonight to improve my recovery.',
-  journal_review: 'Look at my recent journal entries and mood scores. What patterns do you see in how I am thinking and feeling? What should I be working on mentally right now?',
+  sleep:          'Analyse my last 7 nights of sleep data. What patterns do you see? Give me 3 specific things I can do starting tonight to improve my recovery.',
+  journal_review: 'Look at my recent journal entries. What patterns do you see in how I am thinking and feeling? What should I be working on mentally right now?',
 };
 
 async function quickAction(type){
@@ -2367,17 +2213,15 @@ async function loadDailyBriefing(){
     const goals    = getGoals().filter(g=>!g.completed);
     const todayNut = todayNutrition();
     const lastSleep= getSleepArr().slice(-1)[0];
-    const wkCount  = workoutsThisWeek();
     const lastJournal = getJournal().slice(-1)[0];
 
     const snapshot = `
 Current time: ${timeStr2} (${timeOfDay2})
 Habits today: ${doneCnt}/${habits.length} done${missedHabits?' — not yet done: '+missedHabits:''}
 Active goals: ${goals.map(g=>`${g.title} (${calcGoalProgress(g)}%)`).join(', ')||'none set'}
-Workouts this week: ${wkCount}
 Calories logged so far today: ${todayNut?todayNut.calories+'kcal':'nothing logged yet'}
 Last night sleep: ${lastSleep?lastSleep.hours+'h, quality '+lastSleep.quality+'/10':'not logged'}
-Last journal mood: ${lastJournal?lastJournal.mood+'/10 — "'+lastJournal.entry?.slice(0,100)+'"':'no entry yet'}
+Last journal: ${lastJournal?'"'+lastJournal.entry?.slice(0,100)+'"':'no entry yet'}
 `.trim();
 
     const text = await callClaude([{role:'user',
@@ -2398,7 +2242,6 @@ Last journal mood: ${lastJournal?lastJournal.mood+'/10 — "'+lastJournal.entry?
 async function getJournalAIResponse(){
   const p=getProfile();if(!p.apiKey)return;
   const entry=el('j-entry')?.value.trim();if(!entry)return;
-  const mood=parseInt(el('j-mood-val')?.value)||0;
   const aiWrap=el('j-ai-response');if(!aiWrap)return;
   aiWrap.style.display='block';
   aiWrap.innerHTML=`<div class="jentry-ai">
@@ -2407,7 +2250,7 @@ async function getJournalAIResponse(){
   </div>`;
   try{
     const response=await callClaude([{role:'user',
-      content:`I just wrote this journal entry${mood?' (mood: '+mood+'/10)':''}:\n\n"${entry}"\n\nRespond as my elite coach. Be direct, reference my specific data where relevant. Acknowledge what went well, challenge what didn't. End with one powerful action I should take RIGHT NOW.`
+      content:`I just wrote this journal entry:\n\n"${entry}"\n\nRespond as my elite coach. Be direct, reference my specific data where relevant. Acknowledge what went well, challenge what didn't. End with one powerful action I should take RIGHT NOW.`
     }],700);
     aiWrap.innerHTML=`<div class="jentry-ai">
       <div class="jentry-ai-label"><div class="ai-dot"></div>AI Coach Response</div>
@@ -2593,8 +2436,6 @@ function renderJournal(){
   // Pre-fill if entry already exists for today
   const existing = getJournal().find(j=>j.date===t);
   el('j-entry').value  = existing?.entry || '';
-  el('j-mood-val').value = existing?.mood || 7;
-  buildScaleBtns('j-mood-btns','j-mood-val', existing?.mood||7);
   el('j-save-btn').textContent = existing ? '✏️ Update Entry' : '💾 Save Entry';
   // Show AI response if exists
   const aiWrap = el('j-ai-response');
@@ -2619,15 +2460,12 @@ function renderJournalYesterdayRef(){
   const yd   = yesterday();
   const yEntry = getJournal().find(j=>j.date===yd);
   const wrap = el('j-yesterday-content'); if(!wrap) return;
-  function moodEmoji(v){return !v?'—':v>=9?'🤩':v>=7?'😊':v>=5?'😐':v>=3?'😔':'😞'}
-  function moodColor(v){return !v?'var(--gray)':v>=8?'var(--green)':v>=6?'var(--gold)':v>=4?'var(--orange)':'var(--red)'}
   if(!yEntry){
     wrap.innerHTML=`<div class="jref-none">No entry from yesterday.<br><br>Start writing daily and this will show what you wrote — so you can track if you followed through.</div>`;
     return;
   }
   const text = yEntry.entry ? (yEntry.entry.length>300?yEntry.entry.slice(0,300)+'…':yEntry.entry) : '';
   wrap.innerHTML=`
-    <div class="jref-mood" style="color:${moodColor(yEntry.mood)}">${moodEmoji(yEntry.mood)} Mood ${yEntry.mood||'—'}/10</div>
     ${text?`<div class="jref-text">"${esc(text)}"</div>`:'<div class="jref-none">Entry was blank.</div>'}
     ${yEntry.aiResponse?`<div style="margin-top:10px;padding:10px;background:rgba(201,168,76,.06);border-radius:var(--r3);font-size:12px;color:var(--gold);border:1px solid rgba(201,168,76,.1)">🤖 ${esc(yEntry.aiResponse.slice(0,160))}…</div>`:''}`;
 }
@@ -2653,14 +2491,11 @@ function renderJournalEntries(){
     list.innerHTML=`<div class="empty" style="padding:28px 0"><span class="empty-icon" style="font-size:36px">📔</span><p>No past entries yet.</p><p class="empty-sub">Write every day — your future self will thank you.</p></div>`;
     return;
   }
-  function moodEmoji(v){return !v?'':v>=9?'🤩':v>=7?'😊':v>=5?'😐':v>=3?'😔':'😞'}
-  function moodColor(v){return !v?'var(--gray)':v>=8?'var(--green)':v>=6?'var(--gold)':v>=4?'var(--orange)':'var(--red)'}
   list.innerHTML=past.slice(0,20).map(j=>`
     <div class="jentry-card">
       <div class="jentry-header">
         <span class="badge badge-gray" style="font-size:11px">📅 ${fmtDate(j.date)}</span>
-        ${j.mood?`<span class="jentry-mood-badge" style="color:${moodColor(j.mood)}">${moodEmoji(j.mood)} ${j.mood}/10</span>`:''}
-        <button class="jentry-del" onclick="deleteJournalEntry('${j.id}')">🗑</button>
+          <button class="jentry-del" onclick="deleteJournalEntry('${j.id}')">🗑</button>
       </div>
       ${j.entry?`<div class="jentry-text">${esc(j.entry)}</div>`:'<div style="font-size:13px;color:var(--muted)">No text written.</div>'}
       ${j.aiResponse?`<div class="jentry-ai"><div class="jentry-ai-label"><div class="ai-dot"></div>AI Coach</div>${esc(j.aiResponse)}</div>`:''}
@@ -2669,12 +2504,11 @@ function renderJournalEntries(){
 
 function saveJournalEntry(){
   const entry = el('j-entry').value.trim();
-  const mood  = parseInt(el('j-mood-val').value)||0;
-  if(!entry&&!mood){toast('Write something or set a mood first','error');return;}
+  if(!entry){toast('Write something first','error');return;}
   const arr = getJournal();
   const idx = arr.findIndex(j=>j.date===today());
-  if(idx!==-1){arr[idx]={...arr[idx],entry,mood,updatedAt:today()};}
-  else{arr.push({id:genId(),date:today(),entry,mood,aiResponse:null,createdAt:today()});}
+  if(idx!==-1){arr[idx]={...arr[idx],entry,updatedAt:today()};}
+  else{arr.push({id:genId(),date:today(),entry,aiResponse:null,createdAt:today()});}
   saveJournalArr(arr);
   toast('Entry saved 📔','success');
   el('j-save-btn').textContent='✏️ Update Entry';
@@ -2691,180 +2525,12 @@ function deleteJournalEntry(id){
   toast('Entry deleted','info');renderJournal();renderDashboard();
 }
 
-/* ================================================================
-   PART 3 — GYM
-================================================================ */
+/* stubs kept so old localStorage data doesn't cause errors */
 function getWorkoutsArr(){return load(K.workouts,[])}
-function saveWorkoutsArr(w){save(K.workouts,w)}
 function getPRs(){return load(K.prs,{})}
-function savePRs(p){save(K.prs,p)}
 
-let erCount=0;
 
-function renderGym(){
-  const w=getWorkoutsArr();
-  renderGymSummary(w);
-  renderPRBoard();
-  renderVolumeChart(w);
-  renderWorkoutsList(w);
-}
 
-function renderGymSummary(w){
-  const bar=el('gym-summary-bar');if(!bar)return;
-  const prs=getPRs();
-  const wk=workoutsThisWeek();
-  const totalSets=w.reduce((s,x)=>s+(x.exercises||[]).reduce((a,e)=>a+(e.sets||0),0),0);
-  const totalVol=w.reduce((s,x)=>s+(x.exercises||[]).reduce((a,e)=>a+(e.sets||0)*(e.reps||0)*(e.weight||0),0),0);
-  bar.innerHTML=[
-    ['This Week',wk+' workouts','var(--gold)'],
-    ['Total Workouts',w.length,'var(--white)'],
-    ['Total Sets',totalSets,'var(--blue)'],
-    ['Total Volume',(totalVol>=1000?(totalVol/1000).toFixed(1)+'k':totalVol)+' kg','var(--orange)'],
-  ].map(([l,v,c])=>`<div class="summary-chip"><div class="summary-chip-val" style="color:${c}">${v}</div><div class="summary-chip-label">${l}</div></div>`).join('');
-}
-
-function renderPRBoard(){
-  const prs=getPRs();
-  const grid=el('gym-pr-grid');if(!grid)return;
-  const list=Object.entries(prs).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date));
-  const cnt=el('gym-pr-count');if(cnt)cnt.textContent=list.length+' exercises';
-  if(!list.length){
-    grid.innerHTML=`<p style="color:var(--gray);font-size:13px;grid-column:1/-1;padding:4px 0">Log workouts to auto-track your PRs here.</p>`;
-    return;
-  }
-  grid.innerHTML=list.slice(0,8).map(([name,pr])=>`
-    <div class="pr-card">
-      <div class="pr-exercise">${esc(name)}</div>
-      <div class="pr-weight">${pr.weight}<span style="font-size:11px;font-weight:400;color:var(--gray)"> kg</span></div>
-      <div class="pr-sub">${pr.sets}×${pr.reps} · ${fmtDate(pr.date)}</div>
-    </div>`).join('');
-}
-
-function renderVolumeChart(w){
-  const labels=[],data=[];
-  let weekVol=0;
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const ds=d.toISOString().split('T')[0];
-    labels.push(d.toLocaleDateString('en-US',{weekday:'short'}));
-    const v=w.filter(x=>x.date===ds).reduce((s,x)=>(x.exercises||[]).reduce((a,e)=>a+(e.sets||0)*(e.reps||0)*(e.weight||0),s),0);
-    data.push(v);weekVol+=v;
-  }
-  const volEl=el('gym-weekly-vol');
-  if(volEl)volEl.textContent=weekVol>=1000?(weekVol/1000).toFixed(1)+'k kg':weekVol+' kg';
-  mkChart('gym-volume-chart',{
-    type:'bar',
-    data:{labels,datasets:[{data,backgroundColor:'rgba(201,168,76,.28)',borderColor:'#c9a84c',borderWidth:2,borderRadius:6,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw.toLocaleString()} kg`}}},
-      scales:{
-        x:{ticks:{color:'#888',font:{size:11}},grid:{display:false}},
-        y:{ticks:{color:'#888',font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'rgba(255,255,255,.04)'}}
-      }}
-  });
-}
-
-function renderWorkoutsList(w){
-  const list=el('gym-workouts-list');if(!list)return;
-  if(!w.length){
-    list.innerHTML=`<div class="empty"><span class="empty-icon">💪</span><p>No workouts logged yet.</p><p class="empty-sub">Every champion started somewhere.</p><button class="btn btn-gold" style="margin-top:16px" onclick="openWorkoutModal()">+ Log First Workout</button></div>`;
-    return;
-  }
-  const sorted=[...w].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,15);
-  list.innerHTML=sorted.map(x=>{
-    const vol=(x.exercises||[]).reduce((s,e)=>s+(e.sets||0)*(e.reps||0)*(e.weight||0),0);
-    const volStr=vol>=1000?(vol/1000).toFixed(1)+'k':vol;
-    const exHtml=(x.exercises||[]).map(e=>`
-      <div class="ex-entry">
-        <div class="ex-name">${esc(e.name)}</div>
-        <div class="ex-stats">${e.sets}×${e.reps} @ ${e.weight}kg</div>
-      </div>`).join('');
-    return `<div class="workout-card">
-      <div class="wk-head" onclick="toggleWkCard('${x.id}')">
-        <span style="font-size:20px">💪</span>
-        <div style="flex:1">
-          <div class="wk-name">${esc(x.name||'Workout')}</div>
-          <div class="wk-meta">${fmtDate(x.date)} · ${(x.exercises||[]).length} exercises · ${volStr} kg</div>
-        </div>
-        <span id="wkc-${x.id}" style="color:var(--gray);transition:transform .2s;font-size:14px">▾</span>
-        <button class="btn btn-icon btn-sm" style="margin-left:6px" onclick="event.stopPropagation();deleteWorkout('${x.id}')">🗑️</button>
-      </div>
-      <div class="wk-body" id="wkb-${x.id}" style="display:none">${exHtml}</div>
-    </div>`;
-  }).join('');
-}
-
-function toggleWkCard(id){
-  const b=el('wkb-'+id),c=el('wkc-'+id);if(!b)return;
-  const open=b.style.display==='block';
-  b.style.display=open?'none':'block';
-  if(c)c.style.transform=open?'rotate(0deg)':'rotate(180deg)';
-}
-
-function openWorkoutModal(){
-  erCount=0;
-  el('wk-name').value='';
-  el('wk-date').value=today();
-  el('exercise-rows').innerHTML='';
-  addExerciseRow();
-  openModal('workout-modal');
-  setTimeout(()=>el('wk-name').focus(),80);
-}
-
-function addExerciseRow(){
-  const id=++erCount;
-  const row=document.createElement('div');
-  row.className='exercise-row';row.id='er-'+id;
-  row.innerHTML=`<div class="er-head">
-    <input type="text" class="form-input er-name" id="er-n-${id}" placeholder="Exercise name (e.g. Bench Press)" style="flex:1">
-    <button class="btn btn-icon" onclick="document.getElementById('er-${id}').remove()" style="flex-shrink:0">✕</button>
-  </div>
-  <div class="er-grid">
-    <div class="er-field"><label>Sets</label><input type="number" class="form-input" id="er-s-${id}" min="1" max="20" value="3"></div>
-    <div class="er-field"><label>Reps</label><input type="number" class="form-input" id="er-r-${id}" min="1" max="100" value="8"></div>
-    <div class="er-field"><label>Weight (kg)</label><input type="number" class="form-input" id="er-w-${id}" min="0" value="0" step="0.5"></div>
-  </div>`;
-  el('exercise-rows').appendChild(row);
-  setTimeout(()=>row.querySelector('.er-name').focus(),60);
-}
-
-function saveWorkout(){
-  const rows=document.querySelectorAll('.exercise-row');
-  const exercises=[];
-  rows.forEach(row=>{
-    const id=row.id.replace('er-','');
-    const name=el('er-n-'+id)?.value.trim();
-    if(!name)return;
-    exercises.push({name,sets:parseInt(el('er-s-'+id)?.value)||1,reps:parseInt(el('er-r-'+id)?.value)||1,weight:parseFloat(el('er-w-'+id)?.value)||0});
-  });
-  if(!exercises.length){toast('Add at least one exercise','error');return;}
-
-  // PR detection
-  const prs=getPRs();const newPRs=[];
-  exercises.forEach(e=>{
-    if(!e.name||e.weight<=0)return;
-    const cur=prs[e.name];
-    if(!cur||e.weight>cur.weight){
-      if(cur)newPRs.push(`${e.name}: ${e.weight}kg`);
-      prs[e.name]={weight:e.weight,sets:e.sets,reps:e.reps,date:el('wk-date').value||today()};
-    }
-  });
-  savePRs(prs);
-
-  const w=getWorkoutsArr();
-  w.push({id:genId(),name:el('wk-name').value.trim()||'Workout',date:el('wk-date').value||today(),exercises});
-  saveWorkoutsArr(w);
-  closeModal('workout-modal');
-  if(newPRs.length)toast('🏆 New PR: '+newPRs[0],'success');
-  else toast('Workout logged 💪','success');
-  renderGym();renderDashboard();
-}
-
-function deleteWorkout(id){
-  if(!confirm('Delete this workout?'))return;
-  saveWorkoutsArr(getWorkoutsArr().filter(w=>w.id!==id));
-  toast('Workout deleted','info');renderGym();renderDashboard();
-}
 
 /* ================================================================
    PART 3 — NUTRITION
@@ -2963,13 +2629,10 @@ function renderSleepSummary(data){
   const r=data.slice(-7);
   const avgH=r.length?(r.reduce((s,d)=>s+(d.hours||0),0)/r.length).toFixed(1):'—';
   const qArr=r.filter(d=>d.quality);
-  const eArr=r.filter(d=>d.energy);
   const avgQ=qArr.length?(qArr.reduce((s,d)=>s+d.quality,0)/qArr.length).toFixed(1):'—';
-  const avgE=eArr.length?(eArr.reduce((s,d)=>s+d.energy,0)/eArr.length).toFixed(1):'—';
   bar.innerHTML=[
     ['Avg Sleep',avgH+'h',parseFloat(avgH)>=7?'var(--green)':parseFloat(avgH)>=6?'var(--orange)':'var(--red)'],
     ['Avg Quality',avgQ+'/10','var(--blue)'],
-    ['Avg Energy',avgE+'/10','var(--purple)'],
     ['Nights Logged',data.length,'var(--white)'],
   ].map(([l,v,c])=>`<div class="summary-chip"><div class="summary-chip-val" style="color:${c}">${v}</div><div class="summary-chip-label">${l}</div></div>`).join('');
 }
@@ -3016,10 +2679,6 @@ function renderSleepList(data){
           <div class="sleep-mini-val" style="color:${qualColor(s.quality)}">${s.quality||'—'}/10</div>
           <div class="sleep-mini-label">Quality</div>
         </div>
-        <div class="sleep-mini-stat">
-          <div class="sleep-mini-val" style="color:${qualColor(s.energy)}">${s.energy||'—'}/10</div>
-          <div class="sleep-mini-label">Energy</div>
-        </div>
         ${s.notes?`<div class="sleep-mini-stat" style="flex:1"><div class="sleep-mini-val" style="font-size:12px;color:var(--gray);font-weight:400">${esc(s.notes)}</div></div>`:''}
       </div>
       <button class="sleep-del" onclick="deleteSleepEntry('${s.id}')">🗑️</button>
@@ -3033,10 +2692,8 @@ function openSleepModal(){
   el('sleep-hours').value=7;
   el('sleep-hrs-label').textContent='7h';
   el('sleep-quality-val').value=7;
-  el('sleep-energy-val').value=7;
   el('sleep-notes').value='';
   buildScaleBtns('sleep-quality-btns','sleep-quality-val',7);
-  buildScaleBtns('sleep-energy-btns','sleep-energy-val',7);
   openModal('sleep-modal');
 }
 
@@ -3058,11 +2715,10 @@ function saveSleep(){
   const hours=parseFloat(el('sleep-hours').value)||0;
   if(!hours){toast('Enter hours slept','error');return;}
   const quality=parseInt(el('sleep-quality-val').value)||0;
-  const energy=parseInt(el('sleep-energy-val').value)||0;
   const notes=el('sleep-notes').value.trim();
   const data=getSleepArr();
   const idx=data.findIndex(s=>s.date===date);
-  const entry={id:genId(),date,hours,quality,energy,notes};
+  const entry={id:genId(),date,hours,quality,notes};
   if(idx!==-1)data[idx]={...data[idx],...entry};else data.push(entry);
   saveSleepArr(data);closeModal('sleep-modal');
   toast('Sleep logged 😴','success');renderSleep();renderDashboard();
@@ -3638,15 +3294,11 @@ function getYesterdayStats(){
   }).length;
   const yNut=getNutrition().find(n=>n.date===yd)||null;
   const ySleep=getSleep().find(s=>s.date===yd)||null;
-  const yWorkout=getWorkouts().some(w=>w.date===yd);
   const yJournal=getJournal().find(j=>j.date===yd)||null;
   return{
     habitsDone:yHabitsDone, habitsTotal:habits.length, tasksDone:yTasksDone,
     calories:yNut?yNut.calories||0:null, sleep:ySleep?ySleep.hours||0:null,
-    workout:yWorkout,
-    mood:       yJournal?yJournal.mood||null:null,
     journalText:yJournal?yJournal.entry||null:null,
-    journalMood:yJournal?yJournal.mood||null:null,
   };
 }
 
@@ -3657,15 +3309,11 @@ function getTodayStats(){
   const tTasksDone=todos.filter(x=>x.done).length;
   const nut=todayNutrition();
   const sleepToday=getSleep().find(s=>s.date===today())||null;
-  const workoutToday=getWorkouts().some(w=>w.date===today());
   const journalToday=getJournal().find(j=>j.date===today())||null;
   return{
     habitsDone:tHabitsDone, habitsTotal:habits.length, tasksDone:tTasksDone,
     calories:nut?nut.calories||0:null, sleep:sleepToday?sleepToday.hours||0:null,
-    workout:workoutToday,
-    mood:       journalToday?journalToday.mood||null:null,
     journalText:journalToday?journalToday.entry||null:null,
-    journalMood:journalToday?journalToday.mood||null:null,
   };
 }
 
@@ -3692,11 +3340,6 @@ function renderComparison(){
      d:delta(td.calories,yd.calories,false),icon:'🥗'},
     {label:'Sleep',yd:yd.sleep!==null?yd.sleep+'h':'—',td:td.sleep!==null?td.sleep+'h':'—',
      d:delta(td.sleep,yd.sleep),icon:'😴'},
-    {label:'Workout',yd:yd.workout?'Done':'Rest',td:td.workout?'Done':'Rest',
-     d:{icon:td.workout&&!yd.workout?'▲':!td.workout&&yd.workout?'▼':'→',
-        cls:td.workout?'cmp-up':'cmp-neutral',diff:''},icon:'💪'},
-    {label:'Mood',yd:yd.mood!==null?yd.mood+'/10':'—',td:td.mood!==null?td.mood+'/10':'—',
-     d:delta(td.mood,yd.mood),icon:'😊'},
   ];
 
   wrap.innerHTML=items.map(item=>`
@@ -3723,8 +3366,6 @@ function renderComparison(){
 function renderJournalComparison(yd, td){
   const wrap=el('compare-journal'); if(!wrap)return;
 
-  function moodEmoji(v){ return !v?'—':v>=9?'🤩':v>=7?'😊':v>=5?'😐':v>=3?'😔':'😞'; }
-  function moodColor(v){ return !v?'var(--gray)':v>=8?'var(--green)':v>=6?'var(--gold)':v>=4?'var(--orange)':'var(--red)'; }
   function truncate(s,n){ if(!s)return null; return s.length>n?s.slice(0,n).trimEnd()+'…':s; }
 
   const ydText = truncate(yd.journalText, 200);
@@ -3735,9 +3376,6 @@ function renderJournalComparison(yd, td){
   const ydCol = `
     <div class="jcmp-col">
       <div class="jcmp-day">📅 ${ydDateStr} — Yesterday</div>
-      <div class="jcmp-mood" style="color:${moodColor(yd.journalMood)}">
-        ${moodEmoji(yd.journalMood)} ${yd.journalMood?'Mood '+yd.journalMood+'/10':'No mood logged'}
-      </div>
       ${ydText
         ? `<div class="jcmp-text">"${esc(ydText)}"</div>`
         : `<div class="jcmp-none">No entry written yesterday.</div>`}
@@ -3746,9 +3384,6 @@ function renderJournalComparison(yd, td){
   const tdCol = `
     <div class="jcmp-col jcmp-today">
       <div class="jcmp-day">✏️ ${tdDateStr} — Today</div>
-      <div class="jcmp-mood" style="color:${moodColor(td.journalMood)}">
-        ${moodEmoji(td.journalMood)} ${td.journalMood?'Mood '+td.journalMood+'/10':'Mood not set yet'}
-      </div>
       ${tdText
         ? `<div class="jcmp-text">"${esc(tdText)}"</div>`
         : `<div class="jcmp-none">Today's entry not written yet.</div>
@@ -3762,14 +3397,6 @@ function renderJournalComparison(yd, td){
         <span style="cursor:pointer;text-decoration:underline;margin-left:4px" onclick="nav('journal')">Open Journal →</span>
        </div>` : '';
 
-  // Big mood swing alert
-  const swing = (yd.journalMood && td.journalMood && Math.abs(td.journalMood - yd.journalMood) >= 3)
-    ? `<div class="jcmp-followup" style="border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);color:var(--red)">
-        ${td.journalMood > yd.journalMood
-          ? `🚀 Mood jumped +${td.journalMood-yd.journalMood} from yesterday. What shifted? Write it down.`
-          : `⚠️ Mood dropped ${yd.journalMood-td.journalMood} points. Your AI coach needs to hear this.`}
-        <span style="cursor:pointer;text-decoration:underline;margin-left:4px" onclick="nav('journal')">Open Journal →</span>
-       </div>` : '';
 
   wrap.innerHTML = `
     <div class="journal-cmp">
@@ -3778,7 +3405,7 @@ function renderJournalComparison(yd, td){
         <span class="jcmp-dates">${ydDateStr} → ${tdDateStr}</span>
       </div>
       <div class="journal-cmp-cols">${ydCol}${tdCol}</div>
-      ${nudge}${swing}
+      ${nudge}
     </div>`;
 }
 
