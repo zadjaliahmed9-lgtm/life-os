@@ -577,6 +577,39 @@ input,textarea,select{font-family:inherit}
 }
 
 /* ============================================================
+   ONE FOCUS — dashboard hero widget
+============================================================ */
+.one-focus-card{background:var(--bg2);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:20px 24px;margin-bottom:20px;position:relative}
+.one-focus-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:10px}
+.one-focus-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);font-size:20px;font-weight:700;padding:6px 0 10px;outline:none;letter-spacing:-.2px;font-family:inherit}
+.one-focus-input::placeholder{color:var(--muted);font-weight:400;font-size:18px}
+.one-focus-input:focus{border-bottom-color:var(--gold)}
+.one-focus-done-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.one-focus-check{width:28px;height:28px;border-radius:6px;border:2px solid var(--muted);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;flex-shrink:0}
+.one-focus-check.done{background:var(--green);border-color:var(--green);color:#fff}
+.one-focus-done-label{font-size:13px;color:var(--gray)}
+
+/* ============================================================
+   NET WORTH — finance hero widget
+============================================================ */
+.nw-card{background:var(--bg2);border:1px solid rgba(201,168,76,.2);border-radius:var(--r);padding:22px 24px;margin-bottom:16px}
+.nw-hero{font-size:42px;font-weight:900;color:var(--gold);letter-spacing:-1px;line-height:1;margin:6px 0 2px}
+.nw-hero.negative{color:var(--red)}
+.nw-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:2px}
+.nw-change{font-size:13px;font-weight:700;margin-top:4px}
+.nw-change.up{color:var(--green)}.nw-change.down{color:var(--red)}.nw-change.flat{color:var(--gray)}
+.nw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.nw-row{display:flex;flex-direction:column;gap:4px}
+.nw-row-label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.nw-row-input{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);color:var(--white);padding:8px 12px;font-size:15px;font-weight:700;font-family:inherit;width:100%;transition:border-color .2s}
+.nw-row-input:focus{outline:none;border-color:var(--gold3)}
+.nw-divider{grid-column:1/-1;height:1px;background:var(--border2);margin:4px 0}
+.nw-liability .nw-row-input{color:var(--red)}
+.journal-prompts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.j-prompt-btn{padding:7px 12px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--gray);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;text-align:left}
+.j-prompt-btn:hover{border-color:var(--gold3);color:var(--white)}
+
+/* ============================================================
    COMPARISON STRIP
 ============================================================ */
 .cmp-section{margin-bottom:20px}
@@ -911,6 +944,18 @@ input,textarea,select{font-family:inherit}
     <div class="motive-meta" id="motive-meta"></div>
   </div>
 
+  <!-- ONE FOCUS — the only thing that matters today -->
+  <div class="one-focus-card" id="one-focus-card">
+    <div class="one-focus-label">Today's ONE Focus</div>
+    <input class="one-focus-input" id="one-focus-input"
+      placeholder="What's the one thing that makes today a win?"
+      onblur="saveOneFocus()" onkeydown="if(event.key==='Enter'){this.blur()}">
+    <div class="one-focus-done-row" id="one-focus-done-row" style="display:none">
+      <div class="one-focus-check" id="one-focus-check" onclick="toggleOneFocusDone()"></div>
+      <div class="one-focus-done-label" id="one-focus-done-label">Mark as done</div>
+    </div>
+  </div>
+
   <div class="today-bar">
     <div class="today-item">
       <div class="today-label">Today</div>
@@ -1021,7 +1066,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-goals">
   <div class="page-header">
     <div>
-      <div class="page-title">Goals 🎯</div>
+      <div class="page-title">Goals</div>
       <div class="page-subtitle">Set targets, break them into milestones, track every step</div>
     </div>
     <button class="btn btn-gold" onclick="openGoalModal()">+ Add Goal</button>
@@ -1034,7 +1079,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-habits">
   <div class="page-header">
     <div>
-      <div class="page-title">Habits 🔥</div>
+      <div class="page-title">Habits</div>
       <div class="page-subtitle">Daily disciplines that create massive results over time</div>
     </div>
     <button class="btn btn-gold" onclick="openHabitModal()">+ Add Habit</button>
@@ -1054,7 +1099,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-tasks">
   <div class="page-header">
     <div>
-      <div class="page-title">Tasks ✅</div>
+      <div class="page-title">Tasks</div>
       <div class="page-subtitle">Prioritised to-dos — no excuses, get it done</div>
     </div>
     <button class="btn btn-gold" onclick="openTaskModal()">+ Add Task</button>
@@ -1076,7 +1121,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-nutrition">
   <div class="page-header">
     <div>
-      <div class="page-title">Nutrition 🥗</div>
+      <div class="page-title">Nutrition</div>
       <div class="page-subtitle">Track fuel — hit your macros every single day</div>
     </div>
     <button class="btn btn-gold" onclick="openMealModal()">+ Log Meal</button>
@@ -1116,7 +1161,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-sleep">
   <div class="page-header">
     <div>
-      <div class="page-title">Sleep 😴</div>
+      <div class="page-title">Sleep</div>
       <div class="page-subtitle">Recovery is training — track it seriously</div>
     </div>
     <button class="btn btn-gold" onclick="openSleepModal()">+ Log Sleep</button>
@@ -1145,7 +1190,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-finance">
   <div class="page-header">
     <div>
-      <div class="page-title">Finance 💰</div>
+      <div class="page-title">Finance</div>
       <div class="page-subtitle">Track every riyal in and out — freedom starts with awareness</div>
     </div>
     <button class="btn btn-gold" onclick="openFinanceModal()">+ Add Transaction</button>
@@ -1188,7 +1233,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-journal">
   <div class="page-header">
     <div>
-      <div class="page-title">Journal 📔</div>
+      <div class="page-title">Journal</div>
       <div class="page-subtitle">Daily reflection — your most honest data source</div>
     </div>
     <span class="badge badge-gold" id="journal-streak-badge">0 day streak</span>
@@ -1204,10 +1249,17 @@ input,textarea,select{font-family:inherit}
       </div>
 
 
+      <!-- Power questions — click to insert into your entry -->
+      <div class="journal-prompts">
+        <button class="j-prompt-btn" onclick="insertPrompt('What is my ONE focus and am I actually working on it?')">→ Am I focused?</button>
+        <button class="j-prompt-btn" onclick="insertPrompt('What did I produce today — real output, not activity?')">→ Real output?</button>
+        <button class="j-prompt-btn" onclick="insertPrompt('What must I stop doing that is wasting my time or money?')">→ What to cut?</button>
+        <button class="j-prompt-btn" onclick="insertPrompt('What is the highest-leverage move I could make this week?')">→ Highest leverage?</button>
+      </div>
+
       <div class="form-group" style="margin-bottom:12px">
-        <label class="form-label">What happened today? Be honest.</label>
         <textarea class="journal-textarea" id="j-entry"
-          placeholder="Write freely — what went well, what didn't, how you feel, what you need to do tomorrow..."></textarea>
+          placeholder="Write. Answer the questions above or write freely — what happened, what you learned, what you will do differently."></textarea>
       </div>
 
       <button class="btn btn-gold" id="j-save-btn" onclick="saveJournalEntry()" style="width:100%;min-height:48px;font-size:15px">
@@ -1236,7 +1288,7 @@ input,textarea,select{font-family:inherit}
 <section class="page" id="page-coach">
   <div class="page-header" style="margin-bottom:12px">
     <div>
-      <div class="page-title">AI Coach 🤖</div>
+      <div class="page-title">AI Advisor</div>
       <div class="page-subtitle">Direct. No excuses. No sugarcoating.</div>
     </div>
     <button class="btn btn-outline btn-sm" onclick="clearChat()">Clear Chat</button>
@@ -1481,7 +1533,7 @@ input,textarea,select{font-family:inherit}
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('sleep-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveSleep()">Log Sleep 😴</button>
+      <button class="btn btn-gold" onclick="saveSleep()">Log Sleep</button>
     </div>
   </div>
 </div>
@@ -1607,7 +1659,8 @@ const K = {
   profile:'lifeos_profile', goals:'lifeos_goals', habits:'lifeos_habits',
   todos:'lifeos_todos', workouts:'lifeos_workouts', nutrition:'lifeos_nutrition',
   sleep:'lifeos_sleep', finance:'lifeos_finance', journal:'lifeos_journal',
-  chat:'lifeos_chat', prs:'lifeos_prs', dailyMsg:'lifeos_daily_msg', dailyBriefing:'lifeos_daily_briefing'
+  chat:'lifeos_chat', prs:'lifeos_prs', dailyMsg:'lifeos_daily_msg', dailyBriefing:'lifeos_daily_briefing',
+  netWorth:'lifeos_networth', oneFocus:'lifeos_one_focus'
 };
 
 function load(key, fb=null){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fb}catch{return fb}}
@@ -1771,7 +1824,7 @@ function nav(page){
   if(page==='tasks')   { taskFilter='all'; renderTasks(); }
   if(page==='nutrition') renderNutrition();
   if(page==='sleep')     renderSleep();
-  if(page==='finance')   renderFinance();
+  if(page==='finance')  { renderFinance(); loadNWForm(); }
   if(page==='journal')   renderJournal();
   if(page==='coach')     renderCoach();
   window.scrollTo(0,0);
@@ -1825,6 +1878,9 @@ function renderDashboard(){
   /* AI daily message */
   loadDailyAIMessage();
 
+  /* ONE Focus */
+  renderOneFocus();
+
   /* Yesterday vs Today */
   const cmpLabel = el('cmp-date-label');
   if(cmpLabel) cmpLabel.textContent = fmtDate(yesterday()) + ' → ' + fmtDate(today());
@@ -1850,7 +1906,7 @@ function renderDashHabits(habits){
       <div class="habit-check ${done?'done':''}">${done?'✓':''}</div>
       <div class="habit-info">
         <div class="habit-name-text">${esc(h.name)}</div>
-        ${streak>0?`<div class="habit-streak-text">🔥 ${streak} day streak</div>`:''}
+        ${streak>0?`<div class="habit-streak-text">${streak} day streak</div>`:''}
       </div>
       <span style="font-size:18px">${h.icon||'⭐'}</span>
     </div>`;
@@ -1917,25 +1973,153 @@ function confirmClear(){
 }
 
 /* ================================================================
+   ONE FOCUS
+================================================================ */
+function getOneFocus(){return load(K.oneFocus)||{date:'',text:'',done:false}}
+function saveOneFocusData(d){save(K.oneFocus,d)}
+
+function renderOneFocus(){
+  const f=getOneFocus();
+  const inp=el('one-focus-input');
+  const doneRow=el('one-focus-done-row');
+  const check=el('one-focus-check');
+  const label=el('one-focus-done-label');
+  if(!inp)return;
+  // New day: reset
+  if(f.date!==today()){
+    inp.value='';
+    if(doneRow)doneRow.style.display='none';
+    return;
+  }
+  inp.value=f.text||'';
+  if(f.text){
+    if(doneRow)doneRow.style.display='flex';
+    if(check)check.className='one-focus-check'+(f.done?' done':'');
+    if(check)check.textContent=f.done?'✓':'';
+    if(label)label.textContent=f.done?'Done ✓ — strong':'Mark as done';
+  } else {
+    if(doneRow)doneRow.style.display='none';
+  }
+}
+
+function saveOneFocus(){
+  const text=el('one-focus-input')?.value.trim();
+  const f=getOneFocus();
+  saveOneFocusData({date:today(),text:text||'',done:f.date===today()?f.done:false});
+  renderOneFocus();
+}
+
+function toggleOneFocusDone(){
+  const f=getOneFocus();
+  if(f.date!==today())return;
+  f.done=!f.done;
+  saveOneFocusData(f);
+  renderOneFocus();
+  if(f.done)toast('ONE Focus done. That\'s a win.','success');
+}
+
+/* ================================================================
+   NET WORTH
+================================================================ */
+function getNWData(){return load(K.netWorth)||{cash:0,invest:0,property:0,business:0,debt:0,history:[]}}
+function saveNWData(d){save(K.netWorth,d)}
+
+function recalcNW(){
+  const cash=parseFloat(el('nw-cash')?.value)||0;
+  const invest=parseFloat(el('nw-invest')?.value)||0;
+  const property=parseFloat(el('nw-property')?.value)||0;
+  const business=parseFloat(el('nw-business')?.value)||0;
+  const debt=parseFloat(el('nw-debt')?.value)||0;
+  const total=(cash+invest+property+business)-debt;
+  const heroEl=el('nw-total');
+  if(heroEl){
+    heroEl.textContent=(total>=0?'OMR ':'-OMR ')+Math.abs(total).toLocaleString();
+    heroEl.className='nw-hero'+(total<0?' negative':'');
+  }
+}
+
+function loadNWForm(){
+  const d=getNWData();
+  const setV=(id,v)=>{const e=el(id);if(e)e.value=v||''};
+  setV('nw-cash',d.cash);
+  setV('nw-invest',d.invest);
+  setV('nw-property',d.property);
+  setV('nw-business',d.business);
+  setV('nw-debt',d.debt);
+  recalcNW();
+  // Show last updated change
+  const changeEl=el('nw-change');
+  if(changeEl&&d.history&&d.history.length>=2){
+    const prev=d.history[d.history.length-2].nw;
+    const curr=d.history[d.history.length-1].nw;
+    const diff=curr-prev;
+    changeEl.textContent=(diff>=0?'▲ +OMR ':'▼ -OMR ')+Math.abs(diff).toLocaleString()+' since last update';
+    changeEl.className='nw-change '+(diff>=0?'up':'down');
+  } else if(changeEl&&d.history&&d.history.length===1){
+    changeEl.textContent='First entry logged — keep building.';
+    changeEl.className='nw-change flat';
+  }
+}
+
+function saveNetWorth(){
+  const d=getNWData();
+  d.cash=parseFloat(el('nw-cash')?.value)||0;
+  d.invest=parseFloat(el('nw-invest')?.value)||0;
+  d.property=parseFloat(el('nw-property')?.value)||0;
+  d.business=parseFloat(el('nw-business')?.value)||0;
+  d.debt=parseFloat(el('nw-debt')?.value)||0;
+  const total=(d.cash+d.invest+d.property+d.business)-d.debt;
+  if(!d.history)d.history=[];
+  // Snapshot once per week max
+  const lastEntry=d.history[d.history.length-1];
+  if(!lastEntry||lastEntry.date!==today())d.history.push({date:today(),nw:total});
+  else lastEntry.nw=total;
+  saveNWData(d);
+  recalcNW();
+  loadNWForm();
+  toast('Net worth saved — OMR '+total.toLocaleString(),'success');
+  // Update system prompt will auto-include it next AI call
+}
+
+/* ================================================================
+   JOURNAL PROMPT HELPER
+================================================================ */
+function insertPrompt(text){
+  const ta=el('j-entry');if(!ta)return;
+  const sep=ta.value.trim()?'\n\n':'';
+  ta.value=ta.value+sep+text+'\n';
+  ta.focus();
+  ta.setSelectionRange(ta.value.length,ta.value.length);
+}
+
+/* ================================================================
    PART 5 — AI ENGINE
 ================================================================ */
-const BASE_SYSTEM_PROMPT = `You are an elite personal coach. Direct, honest, no sugarcoating — but you are rational and make sense.
+const BASE_SYSTEM_PROMPT = `You are a strategic advisor to high performers. You think like Ray Dalio, speak like Warren Buffett, and execute like Alex Hormozi.
 
-CRITICAL RULES — follow these always:
-1. You always know the current time. NEVER criticise incomplete daily metrics if the day is not over. If it is 8am and they have not eaten, that is completely normal. If it is 10pm and they have not eaten, that is worth mentioning. Use context.
-2. Judge PATTERNS across multiple days, not single incomplete snapshots. One missed habit today means nothing. Missing the same habit 5 days in a row is a pattern worth calling out.
-3. Only call something out if it is actually a problem given the time and context. A good coach is sharp, not irrational.
-4. Give specific, actionable advice — not generic motivational filler.
-5. Celebrate real wins specifically when they exist.
-6. Always end with ONE clear action they can take right now given the current time of day.
+Your entire philosophy:
+- Net worth growth is the scoreboard. Not busyness, not effort, not feelings.
+- One high-leverage action beats twenty low-leverage ones every time.
+- Compounding works on everything: money, skills, habits, relationships.
+- Time is the only truly scarce resource. Guard it like capital.
+- Most "urgent" things are not important. Most important things are never urgent.
+- The 20% of actions driving 80% of results — find them, double down on them, cut everything else.
 
-Your style:
-- Direct and confident, never preachy
-- Short sentences, no fluff
-- Reference their actual data — goals, habits, workouts, sleep, finances, journal
-- Think like a world-class coach who has seen real results, not someone who just yells
+HOW YOU SPEAK:
+- Short, precise sentences. Zero filler words.
+- You reference their actual data — goals, finances, habits, sleep, journal.
+- You think in terms of ROI and leverage, not motivation and hustle.
+- You do not cheerleade. You give the clearest possible picture of reality and the most logical next move.
+- You speak like an advisor who charges serious money and respects their time completely.
 
-You believe discipline beats motivation, small daily actions compound, and financial freedom is built through consistency and smart decisions.`;
+CRITICAL RULES:
+1. Always know the current time. Never criticise metrics that cannot yet be completed — if it is morning, do not comment on what has not happened yet.
+2. Judge patterns over days and weeks, not single snapshots.
+3. When finances are discussed, focus on net worth trajectory — not just spending.
+4. Always end with ONE specific action. Not three. Not a list. ONE thing that will have the highest return on their time right now.
+5. Never use motivational clichés. No "you got this", no "keep grinding", no generic advice.
+
+You believe: wealth is built through compounding of capital, skills, and relationships — over years, not weeks. Every day is an investment or a withdrawal.`;
 
 function buildSystemPrompt(){
   const p = getProfile();
@@ -1965,6 +2149,7 @@ NAME: ${p.name||'User'} | AGE: ${p.age||'?'} | WEIGHT: ${p.weight?p.weight+' kg'
 MAIN GOAL: ${p.mainGoal||'Not set'}
 CURRENT TIME: ${timeStr} (${timeOfDay}) — factor this into everything you say
 TODAY: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+TODAY'S ONE FOCUS: ${(()=>{const f=getOneFocus();return f.date===today()&&f.text?(f.done?'[DONE] ':'')+f.text:'Not set yet';})()}
 
 ACTIVE GOALS:
 ${goals}
@@ -1975,7 +2160,7 @@ ${habits}
 TODAY'S NUTRITION: ${nutStr}
 SLEEP (7-night avg): ${avgSl}h
 
-FINANCES (This month): Income OMR ${inc.toLocaleString()} | Expenses OMR ${exp.toLocaleString()} | Net OMR ${(inc-exp).toLocaleString()}${p.savingsGoal?' | Goal: OMR '+p.savingsGoal.toLocaleString():''}
+FINANCES (This month): Income OMR ${inc.toLocaleString()} | Expenses OMR ${exp.toLocaleString()} | Net OMR ${(inc-exp).toLocaleString()}${p.savingsGoal?' | Savings Goal: OMR '+p.savingsGoal.toLocaleString():''}
 
 RECENT JOURNAL:
 ${jRecent}`;
@@ -2479,7 +2664,7 @@ function renderJournalStreak(){
     else if(i===0){d.setDate(d.getDate()-1);}
     else break;
   }
-  badge.textContent = streak>0?`🔥 ${streak} day streak`:'Start your streak';
+  badge.textContent = streak>0?`${streak} day streak`:'Start your streak';
 }
 
 function renderJournalEntries(){
@@ -3028,7 +3213,7 @@ function buildHabitCard(h) {
       </div>
       <div class="habit-card-info">
         <div class="habit-card-name">${h.icon||'⭐'} ${esc(h.name)}</div>
-        <div class="habit-card-streak">${streak>0?`🔥 ${streak} day streak`:'Start your streak today!'}</div>
+        <div class="habit-card-streak">${streak>0?`${streak} day streak`:'Start your streak today!'}</div>
         <div class="habit-dots">${dots.join('')}</div>
       </div>
       <div class="habit-card-actions">
